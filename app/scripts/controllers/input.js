@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name wircApp.controller:MainCtrl
+ * @name wircApp.controller:InputCtrl
  * @description
- * # MainCtrl
+ * # InputCtrl
  * Controller of the wircApp
  */
 angular.module('wircApp')

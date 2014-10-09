@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name wircApp.controller:MainCtrl
+ * @name wircApp.controller:LogoutCtrl
  * @description
- * # MainCtrl
+ * # LogoutCtrl
  * Controller of the wircApp
  */
 angular.module('wircApp')
