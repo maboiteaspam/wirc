@@ -32,18 +32,20 @@ angular.module('wircApp')
                 });
                 w.onclose(function(){
                     $scope.$apply(function () {
-                        $rootScope.$broadcast("user_logout", $scope.user, w, true)
+                        $rootScope.$broadcast("user_logout", $scope.user, null)
+                        w=null;
                     });
                 });
             },true);
             w.login($scope.input.username);
         });
     };
-    $rootScope.$on("user_logout", function(ev, user, w, has_disconnected){
+    $rootScope.$on("user_logout", function(ev, user, w){
         $scope.user.logged = $scope.input.logged = user.logged = false;
         $scope.user.username = user.username = "";
         $scope.user.token = user.token = "";
-        if(!has_disconnected) w.quit(user.username, user.token)
+        if(w) w.quit(user.username, user.token)
+        w=null;
     })
 
   });
