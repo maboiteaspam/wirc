@@ -71,9 +71,7 @@ angular
                         };
                         that.socket.onclose = function(){
                             propagate_message({
-                                data:{
-                                    message:"socket_close"
-                                }
+                                message:"socket_close"
                             });
                         };
                         if(then) then();
