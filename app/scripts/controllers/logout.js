@@ -10,8 +10,7 @@
 angular.module('wircApp')
   .controller('LogoutCtrl', function ($scope, $rootScope) {
     $scope.user = {
-        logged:false,
-        username:""
+        logged:false
     };
 
     $scope.logout = function(){};

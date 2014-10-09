@@ -95,10 +95,11 @@ angular
                         username:username
                     }));
                 }
-                this.quit = function(username){
+                this.quit = function(username,token){
                     that.socket.send(JSON.stringify({
                         message:'bye',
-                        username:username
+                        username:username,
+                        token:token
                     }));
                     try{
                         that.socket.socket.close();
