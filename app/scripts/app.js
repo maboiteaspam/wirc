@@ -14,10 +14,7 @@ angular
         'angular-underscore'
     ])
     .service('websocket', function() {
-        this.opened_cnt = 0;
-        this.connected_cnt = 0;
         this.get = function(address){
-            var that = this;
             var websocket = new WebSocket(address);
             websocket.onopen = function(evt){
                 console.log("socket open")
@@ -35,7 +32,6 @@ angular
                 console.log("socket error")
                 console.log(evt)
             };
-            this.opened_cnt++;
             return websocket;
         }
     })
