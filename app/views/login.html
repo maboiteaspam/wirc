@@ -1,5 +1,5 @@
 <div class="login-screen"
-     ng-class="{connected: user.logged}"
+     ng-class="{connected: input.logged}"
      full-height full-width>
 
     <div class="bg"></div>
@@ -7,14 +7,18 @@
     <form class="form-signin" role="form" ng-submit="login()">
         <h2 class="form-signin-heading">Please sign in</h2>
         <input type="server" class="form-control"
-               value="ws://echo.websocket.org/"
-               placeholder="Server address" required>
-        <input type="email" class="form-control"
-               placeholder="Email address" required autofocus>
-        <input type="password" class="form-control"
-               placeholder="Password" required>
+               ng-model="input.server_address"
+               placeholder="Server address" required
+                />
+        <input type="text" class="form-control"
+               ng-model="input.username"
+               placeholder="Username" required autofocus
+                />
         <label class="checkbox">
-            <input type="checkbox" value="remember-me"> Remember me
+            <input type="checkbox"
+                   ng-model="input.remember_me"
+                   value="remember-me"
+                    /> Remember me
         </label>
         <button class="btn btn-lg btn-primary btn-block"
                 type="submit">Sign in</button>
