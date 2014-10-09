@@ -53,6 +53,10 @@
       </div>
         -->
 
+        <div ng-include="'views/logout.html'"
+             ng-controller="LogoutCtrl"
+                ></div>
+
         <div ng-include="'views/login.html'"
              ng-controller="LoginCtrl"
             ></div>
@@ -72,12 +76,15 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="bower_components/angular-scroll/angular-scroll.min.js"></script>
+    <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/angular-underscore/angular-underscore.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/login.js"></script>
+        <script src="scripts/controllers/logout.js"></script>
         <script src="scripts/controllers/users.js"></script>
         <script src="scripts/controllers/chat.js"></script>
         <script src="scripts/controllers/input.js"></script>
