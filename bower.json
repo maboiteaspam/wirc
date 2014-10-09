@@ -8,7 +8,8 @@
     "bootstrap": "~3.2.0",
     "angular-bootstrap": "~0.11.2",
     "angular-scroll": "~0.6.2",
-    "underscore": "~1.7.0"
+    "underscore": "~1.7.0",
+    "angular-underscore": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",
