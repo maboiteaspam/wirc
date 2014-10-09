@@ -8,18 +8,45 @@
  * Controller of the wircApp
  */
 angular.module('wircApp')
-  .controller('LoginCtrl', function ($scope) {
+  .controller('LoginCtrl', function ($scope, $rootScope, websocket) {
     $scope.user = {
-        logged:false
+        logged:false,
+        username:""
+    };
+    $scope.input = {
+        logged:false,
+        remember_me:false,
+        server_address:"ws://localhost:8080/",
+        username:"tomate"
     };
     $scope.login = function(){
-        /*
-         setTimeout(function(){
-         $scope.$apply(function () {
-         $scope.user.logged = true;
-         });
-         },1500)
-         */
+        var socket = websocket.get($scope.input.server_address);
+        socket.onopen = function(evt){
+            socket.onmessage = function(res){
+                res = JSON.parse(res.data);
+                if( res.message == "login_success" ){
+                    $scope.$apply(function () {
+                        $scope.user.logged = $scope.input.logged = true;
+                        $scope.user.username = $scope.input.username;
+                        $rootScope.$broadcast("user_login", $scope.user, socket );
+                    });
+                }else if( res.message == "login_failure" ){
+                    $rootScope.$broadcast("user_logout", $scope.user, socket );
+                    socket.send(JSON.stringify({
+                        message:'bye',
+                        username:$scope.input.username
+                    }));
+                    try{
+                        socket.close();
+                    }catch(ex){}
+                }
+            };
+            socket.send(JSON.stringify({
+                message:'login',
+                username:$scope.input.username
+            }));
+        };
         return false;
     };
+
   });
