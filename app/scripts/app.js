@@ -54,8 +54,7 @@ angular
                 that.ons = [];
                 that.oners = [];
 
-                var parse_response = function(res){
-                    res = JSON.parse(res.data);
+                var propagate_message = function(res){
                     for( var n in that.oners ){
                         that.oners[n](res)
                     }
@@ -67,13 +66,14 @@ angular
                     that.socket = websocket.get(address);
                     that.socket.onopen = function(evt){
                         that.socket.onmessage = function(res){
-                            parse_response(res);
+                            res = JSON.parse(res.data);
+                            propagate_message(res);
                         };
                         that.socket.onclose = function(){
-                            parse_response({
-                                data:JSON.stringify({
+                            propagate_message({
+                                data:{
                                     message:"socket_close"
-                                })
+                                }
                             });
                         };
                         if(then) then();
