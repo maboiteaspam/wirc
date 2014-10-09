@@ -45,7 +45,7 @@ ul, ul li{
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 2;
+    z-index: 5;
 }
 .login-screen.connected{
     display: none;
@@ -69,4 +69,15 @@ ul, ul li{
     left: 50%;
     margin-top:-150px;
     margin-left:-200px;
+}
+
+.logout{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2;
+    display: none;
+}
+.logout.connected{
+    display: block;
 }
