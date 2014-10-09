@@ -12,6 +12,31 @@ angular
     .module('wircApp', [
         'duScroll'
     ])
+    .service('websocket', function() {
+        this.opened_cnt = 0;
+        this.connected_cnt = 0;
+        this.get = function(address){
+            var that = this;
+            var websocket = new WebSocket(address);
+            websocket.onopen = function(evt){
+                that.connected_cnt++;
+            };
+            websocket.onclose = function(evt){
+                that.connected_cnt--;
+                that.opened_cnt--;
+            };
+            websocket.onmessage = function(evt){
+                console.log("socket message")
+                console.log(evt)
+            };
+            websocket.onerror = function(evt){
+                console.log("socket error")
+                console.log(evt)
+            };
+            this.opened_cnt++;
+            return websocket;
+        }
+    })
     .directive('fullHeight', ['$timeout','$window',function (debounce,$interval,$window) {
         return {
             restrict: 'A',
@@ -38,7 +63,9 @@ angular
             }
         };
     }])
-    .run(function($rootScope){
-        $rootScope.tomate = "sdfsdfsdf"
-    })
+    /*
+     .run(function($rootScope){
+     $rootScope.tomate = "sdfsdfsdf"
+     })
+     */
 ;
