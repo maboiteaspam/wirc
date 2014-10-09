@@ -18,7 +18,7 @@ angular.module('wircApp')
     $scope.keyUpListener = function($event){
         /* check for Enter key */
         if ($event.keyCode == 13) {
-            $scope.sendMessage()
+            $scope.sendMessage();
         }
     };
   });
