@@ -1,0 +1,11 @@
+<div class="user-input">
+    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11">
+        <input type="text"
+               ng-keyup="keyUpListener($event)"
+               ng-model="new_message.text"
+               class="form-control " />
+    </div>
+    <button class="btn btn-default col-lg-1 col-md-1 col-sm-1 col-xs-1"
+            ng-click="sendMessage()"
+            >send</button>
+</div>

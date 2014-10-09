@@ -1,0 +1,14 @@
+{
+  "name": "wirc-socket",
+  "version": "0.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "jshint-stylish": "^0.2.0"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  }
+}

@@ -1,0 +1,72 @@
+html{
+}
+body {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+ul, ul li{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.container-fluid{
+}
+.chat{
+    float: left;
+    width: 100%;
+    padding-left: 200px;
+    padding-bottom: 55px;
+    z-index: 1;
+    overflow: auto;
+}
+.users{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 200px;
+    z-index: 1;
+    padding-bottom: 55px;
+}
+.user-input{
+    width: 100%;
+    height: 50px;
+    position: fixed;
+    bottom: 0;
+    background-color: #ffffff;
+}
+.user-input input{
+    display: inline-block;
+}
+.user-input button{
+}
+
+.login-screen{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+.login-screen.connected{
+    display: none;
+}
+.login-screen .bg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    z-index: -1;
+    opacity: .7;
+}
+.login-screen .form-signin{
+    position: fixed;
+    width: 400px;
+    height: 300px;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    margin-top:-150px;
+    margin-left:-200px;
+}
