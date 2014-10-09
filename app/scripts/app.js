@@ -20,11 +20,12 @@ angular
             var that = this;
             var websocket = new WebSocket(address);
             websocket.onopen = function(evt){
-                that.connected_cnt++;
+                console.log("socket open")
+                console.log(evt)
             };
             websocket.onclose = function(evt){
-                that.connected_cnt--;
-                that.opened_cnt--;
+                console.log("socket close")
+                console.log(evt)
             };
             websocket.onmessage = function(evt){
                 console.log("socket message")
@@ -72,8 +73,18 @@ angular
                         that.socket.onmessage = function(res){
                             parse_response(res);
                         };
+                        that.socket.onclose = function(){
+                            parse_response({
+                                data:JSON.stringify({
+                                    message:"socket_close"
+                                })
+                            });
+                        };
                         if(then) then();
                     };
+                }
+                this.onclose = function(then){
+                    that.one("socket_close",then);
                 }
                 this.on = function(message,fn){
                     sub(that.ons,function(res){
@@ -89,6 +100,7 @@ angular
                         }
                     },true);
                 }
+
                 this.login = function(username){
                     that.socket.send(JSON.stringify({
                         message:'login',
@@ -102,7 +114,7 @@ angular
                         token:token
                     }));
                     try{
-                        that.socket.socket.close();
+                        that.socket.close();
                     }catch(ex){}
                 }
             };

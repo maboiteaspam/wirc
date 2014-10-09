@@ -22,6 +22,11 @@ angular.module('wircApp')
     };
     $scope.login = function(){
         var w = wirc.get($scope.input.server_address);
+        w.onclose(function(){
+            $scope.user.logged = $scope.input.logged = false;
+            $scope.user.username = "";
+            $scope.user.token = "";
+        });
         w.open(function(){
             w.one("login_success",function(res){
                 $scope.$apply(function () {
