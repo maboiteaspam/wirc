@@ -11,16 +11,30 @@ var UserHelper = function(){
             var token =  username+'salt' /* to improve in real world */;
             users[username] = {
                 username:username,
-                token:token
+                token:token,
+                messages:[]
             };
             return users[username];
         }
         return false;
     }
     that.logout = function(username,token){
+        if( that.check_token(username,token) ){
+            users[username] = null;
+            return true;
+        }
+        return false;
+    }
+    that.check_token = function(username,token){
         if( users[username]
             && users[username].token == token ){
-            users[username] = null;
+            return true;
+        }
+        return false;
+    }
+    that.emit_message = function(username,token,message){
+        if( that.check_token(username,token) ){
+            users[username].messages.push(message)
             return true;
         }
         return false;
@@ -56,6 +70,26 @@ wss.on('connection', function(ws) {
                     message:"login_failure"
                 }));
                 console.log("failure login : " + data.username);
+            }
+        }
+    });
+    ws.on('message', function(message) {
+        var data = JSON.parse(message);
+        if( data.message == "send_message" ){
+            var user_message = {
+                username:data.username,
+                user_message:data.user_message,
+                message_id:data.message_id,
+                message_date:data.message_date
+            };
+            if( UserH.emit_message(data.username , data.token, user_message) ){
+                console.log("successful send_message : " + data.username);
+                ws.send(JSON.stringify({
+                    message:"message_sent",
+                    user_message: user_message
+                }));
+            }else{
+                console.log("failure send_message : " + data.username);
             }
         }
     });
