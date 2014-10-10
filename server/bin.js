@@ -47,6 +47,11 @@ var UserHelper = function(){
         return false;
     }
 }
+function broadcast(server, msg) {
+    server.clients.forEach(function (client) {
+        client.send(msg)
+    })
+}
 var UserH = new UserHelper();
 wss.on('connection', function(ws) {
     console.log("connected");
@@ -84,7 +89,7 @@ wss.on('connection', function(ws) {
             };
             if( UserH.emit_message(data.username , data.token, user_message) ){
                 console.log("successful send_message : " + data.username);
-                ws.send(JSON.stringify({
+                broadcast(wss, JSON.stringify({
                     message:"message_sent",
                     user_message: user_message
                 }));
