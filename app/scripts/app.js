@@ -11,6 +11,7 @@
 angular
     .module('wircApp', [
         'duScroll',
+        'angularMoment',
         'angular-underscore'
     ])
     .service('websocket', function() {
@@ -95,6 +96,16 @@ angular
                     },true);
                 }
 
+                this.send_message = function(username,message_content,message_id,message_date,token){
+                    that.socket.send(JSON.stringify({
+                        message:'send_message',
+                        username:username,
+                        user_message:message_content,
+                        message_id:message_id,
+                        message_date:message_date,
+                        token:token
+                    }));
+                }
                 this.login = function(username){
                     that.socket.send(JSON.stringify({
                         message:'login',
@@ -114,29 +125,44 @@ angular
             };
         }
     })
-    .directive('fullHeight', ['$timeout','$window',function (debounce,$interval,$window) {
+    .directive('keepScrollDown', ['$window',function ($window) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var el = angular.element(element);
-                scope.$watch(function(){
-                    return window.innerHeight;
-                }, function(value) {
-                    el.css("height", value+"px");
-                },250);
+                el.on("DOMSubtreeModified", _.debounce(function(e){
+                    if (el[0].scrollHeight-el[0].offsetHeight - el.scrollTop() <= 50 ) {
+                        el.scrollToAnimated(0, el[0].scrollHeight, 50);
+                    }
+                }, 50));
             }
         };
     }])
-    .directive('fullWidth', ['$timeout','$window',function (debounce,$interval,$window) {
+    .directive('fullHeight', ['$window', function ($window) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var el = angular.element(element);
-                scope.$watch(function(){
-                    return window.innerWidth;
-                }, function(value) {
+                $(window).resize(_.debounce(function(){
+                    var value = $(window).height() - (el.outerHeight(true) - el.height())
+                    el.css("height", value+"px");
+                }, 150));
+                var value = $(window).height() - (el.outerHeight(true) - el.height())
+                el.css("height", value+"px");
+            }
+        };
+    }])
+    .directive('fullWidth', ['$window', function ($window) {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var el = angular.element(element);
+                $(window).resize(_.debounce(function(){
+                    var value = $(window).width() - (el.outerWidth(true) - el.width())
                     el.css("width", value+"px");
-                },250);
+                }, 150));
+                var value = $(window).width() - (el.outerWidth(true) - el.width())
+                el.css("width", value+"px");
             }
         };
     }])
