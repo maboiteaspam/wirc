@@ -13,9 +13,9 @@ angular.module('wircApp')
         text:"Type message here"
     };
     $scope.sendMessage = function(){};
-    $rootScope.$on("user_login", function(user, w){
+    $rootScope.$on("user_login", function(ev, user, w){
         $scope.sendMessage = function(){
-            $rootScope.$broadcast("new_message", $scope.new_message );
+            $rootScope.$broadcast("new_message", $scope.new_message.text, user, w );
         };
     });
     $rootScope.$on("user_logout", function(user, socket){
