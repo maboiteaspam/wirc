@@ -38,11 +38,11 @@ angular.module('wircApp')
                     $scope.users.push(newUser);
                 });
             });
-        });
-        w.on('userLeave',function(data){
-            $scope.$apply(function () {
-                $scope.users = $scope.reject($scope.users, function(u){
-                    return u.name === data.userName;
+            w.on('userLeave',function(data){
+                $scope.$apply(function () {
+                    $scope.users = $scope.reject($scope.users, function(u){
+                        return u.name === data.userName;
+                    });
                 });
             });
         });
