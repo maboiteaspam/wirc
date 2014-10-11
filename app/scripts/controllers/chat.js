@@ -13,7 +13,7 @@ angular.module('wircApp')
     $scope.messages = [
         /*
          {
-         username:'xxx',
+         userName:'xxx',
          text:'hello !',
          message_date:1,
          id:0
@@ -21,57 +21,62 @@ angular.module('wircApp')
          */
     ];
     /* stack of local messages for immediate display */
-    $scope.local_messages = [
+    $scope.localMessages = [
         /*
          {
-         username:'yyyy',
+         userName:'yyyy',
          text:'hello !',
          message_date:1,
          id:1
          }
          */
     ];
-    $scope.message_id = 0;
+    $scope.messageId = 0;
     /* when user sends a message */
-    $scope.$on("new_message",function($event, message, user, w){
+    $scope.$on('newMessage',function($event, message, user, w){
         /* forge a message structure */
-        var user_message = {
+        var userMessage = {
             text:message,
-            username:user.username,
-            message_date:moment().valueOf(),
-            id: $scope.message_id
+            userName:user.userName,
+            messageDate:moment().valueOf(),
+            id: $scope.messageId
         };
-        $scope.message_id++;
+        $scope.messageId++;
         /* stacks it for immediate display */
-        $scope.local_messages.push(user_message);
+        $scope.localMessages.push(userMessage);
         /* now broadcast to other users via central server */
-        w.send_message(user_message.username,user_message.text,user_message.id,user_message.message_date,user.token);
-    })
+        w.sendMessage(
+            userMessage.userName,
+            userMessage.text,
+            userMessage.id,
+            userMessage.messageDate,
+            user.token);
+    });
     /* when server emits a message */
-    $scope.$on("user_login",function($event, user, w){
-        w.on("message_sent",function(evt){
+    $scope.$on('userLogin',function($event, user, w){
+        w.on('messageSent',function(evt){
             $scope.$apply(function () {
-                var message = evt.user_message;
+                var message = evt.userMessage;
                 /* needs to move the message from local immediate stack to shared stack */
-                if( message.username == user.username ){
-                    $scope.local_messages = $scope.reject($scope.local_messages, function(m){
-                        return m.id == message.message_id;
-                    })
+                if( message.userName === user.userName ){
+                    $scope.localMessages = $scope.reject($scope.localMessages, function(m){
+                        return m.id === message.messageId;
+                    });
                 }
                 /* forge a message structure */
-                var user_message = {
-                    text:message.user_message,
-                    username:message.username,
-                    message_date:message.message_date,
-                    id: message.message_id
+                var userMessage = {
+                    text:message.userMessage,
+                    userName:message.userName,
+                    messageDate:message.messageDate,
+                    id: message.messageId
                 };
                 /* push into the shared message stack */
-                $scope.messages.push(user_message);
+                $scope.messages.push(userMessage);
             });
-        })
+        });
     });
-    $scope.$on("user_logout", function(user, socket){
+    $scope.$on('userLogout', function( /* user, w */ ){
         $scope.messages = [];
-        $scope.local_messages = [];
+        $scope.localMessages = [];
     });
   });

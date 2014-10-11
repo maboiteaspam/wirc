@@ -1,10 +1,10 @@
 <div class="chat" full-height keep-scroll-down>
     <ul>
         <li ng-repeat="message in messages">
-            server {{message.username}} {{message.message_date}} {{message.text}}
+            server {{message.userName}} {{message.messageDate}} {{message.text}}
         </li>
-        <li ng-repeat="message in local_messages">
-            local {{message.username}} {{message.message_date}} {{message.text}}
+        <li ng-repeat="message in localMessages">
+            local {{message.userName}} {{message.messageDate}} {{message.text}}
         </li>
     </ul>
 </div>

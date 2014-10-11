@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('wirc', [
 ])
     /* Provides websocket access within angularJS  */
@@ -5,38 +7,38 @@ angular.module('wirc', [
         this.get = function(address){
             var websocket = new WebSocket(address);
             websocket.onopen = function(evt){
-                console.log("socket open")
-                console.log(evt)
+                console.log('socket open');
+                console.log(evt);
             };
             websocket.onclose = function(evt){
-                console.log("socket close")
-                console.log(evt)
+                console.log('socket close');
+                console.log(evt);
             };
             websocket.onmessage = function(evt){
-                console.log("socket message")
-                console.log(evt)
+                console.log('socket message');
+                console.log(evt);
             };
             websocket.onerror = function(evt){
-                console.log("socket error")
-                console.log(evt)
+                console.log('socket error');
+                console.log(evt);
             };
             return websocket;
-        }
+        };
     })
     /* Implements event driven webocket consumption (it s a stream..) */
     /* Implements convenient methods to consume wirc server */
     .service('wirc', function(websocket) {
         var sub = function(to,fn,one){
             if( one ){
-                fn = (function(old_fn,to){
+                fn = (function(oldFn,to){
                     return function(res){
-                        delete to[ to.indexOf(old_fn) ]
-                        old_fn(res);
-                    }
+                        delete to[ to.indexOf(oldFn) ];
+                        oldFn(res);
+                    };
                 })(fn,to);
             }
             to.push(fn);
-        }
+        };
         this.get = function(address){
             return new function(){
                 var that = this;
@@ -44,79 +46,85 @@ angular.module('wirc', [
                 that.ons = []; // repeated event listeners
                 that.oners = []; // one event listeners
 
-                var propagate_message = function(res){
+                var propagateMessage = function(res){
                     for( var n in that.oners ){
-                        that.oners[n](res)
+                        that.oners[n](res);
                     }
-                    for( var n in that.ons ){
-                        that.ons[n](res)
+                    for( var nn in that.ons ){
+                        that.ons[nn](res);
                     }
                 };
                 /* manages websocket lifecycle */
                 this.open = function(then){
                     that.socket = websocket.get(address);
-                    that.socket.onopen = function(evt){
+                    that.socket.onopen = function(){
                         that.socket.onmessage = function(res){
                             res = JSON.parse(res.data);
-                            propagate_message(res);
+                            propagateMessage(res);
                         };
                         that.socket.onclose = function(){
-                            propagate_message({
-                                message:"socket_close"
+                            propagateMessage({
+                                message:'socketClose'
                             });
                         };
-                        if(then) then();
+                        if(then){
+                            then();
+                        }
                     };
-                }
+                };
                 this.onclose = function(then){
-                    that.one("socket_close",then);
-                }
+                    that.one('socketClose',then);
+                };
                 /* subscribes message receivers */
                 this.on = function(message,fn){
                     sub(that.ons,function(res){
-                        if( res.message == message ){
-                            fn(res)
+                        if( res.message === message ){
+                            fn(res);
                         }
                     },false);
-                }
+                };
                 this.one = function(message,fn){
                     sub(that.oners,function(res){
-                        if( res.message == message ){
-                            fn(res)
+                        if( res.message === message ){
+                            fn(res);
                         }
                     },true);
-                }
+                };
 
                 /* specific wirc message implementation */
-                /* emits chat user_message */
-                this.send_message = function(username,message_content,message_id,message_date,token){
+                /* emits chat userMessage */
+                this.sendMessage = function(userName,
+                                             messageContent,
+                                             messageId,
+                                             messageDate,
+                                             token){
                     that.socket.send(JSON.stringify({
-                        message:'send_message',
-                        username:username,
-                        user_message:message_content,
-                        message_id:message_id,
-                        message_date:message_date,
+                        message:'sendMessage',
+                        userName:userName,
+                        userMessage:messageContent,
+                        messageId:messageId,
+                        messageDate:messageDate,
                         token:token
                     }));
-                }
+                };
                 /* emits login attempt */
-                this.login = function(username){
+                this.login = function(userName){
                     that.socket.send(JSON.stringify({
                         message:'login',
-                        username:username
+                        userName:userName
                     }));
-                }
+                };
                 /* emits user disconnection */
-                this.quit = function(username,token){
+                this.quit = function(userName,token){
                     that.socket.send(JSON.stringify({
                         message:'bye',
-                        username:username,
+                        userName:userName,
                         token:token
                     }));
                     try{
                         that.socket.close();
                     }catch(ex){}
-                }
+                };
             };
-        }
-    })
+        };
+    });

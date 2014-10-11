@@ -6,47 +6,47 @@ var WebSocketServer = require('ws').Server
 
 var UserHelper = function(){
     var that = this;
-    that.login = function(username){
-        if( ! users[username] ){
-            var token =  username+'salt' /* to improve in real world */;
-            users[username] = {
-                username:username,
+    that.login = function(userName){
+        if( ! users[userName] ){
+            var token =  userName+'salt' /* to improve in real world */;
+            users[userName] = {
+                userName:userName,
                 token:token,
                 messages:[]
             };
-            return users[username];
+            return users[userName];
         }
         return false;
-    }
-    that.logout = function(username,token){
-        if( that.check_token(username,token) ){
-            users[username] = null;
+    };
+    that.logout = function(userName,token){
+        if( that.check_token(userName,token) ){
+            users[userName] = null;
             return true;
         }
         return false;
-    }
-    that.check_token = function(username,token){
-        if( users[username]
-            && users[username].token == token ){
+    };
+    that.check_token = function(userName,token){
+        if( users[userName]
+            && users[userName].token == token ){
             return true;
         }
         return false;
-    }
-    that.emit_message = function(username,token,message){
-        if( that.check_token(username,token) ){
-            users[username].messages.push(message)
+    };
+    that.emit_message = function(userName,token,message){
+        if( that.check_token(userName,token) ){
+            users[userName].messages.push(message);
             return true;
         }
         return false;
-    }
-    that.remove = function(username){
-        if( users[username] ){
-            users[username] = null;
+    };
+    that.remove = function(userName){
+        if( users[userName] ){
+            users[userName] = null;
             return true;
         }
         return false;
-    }
-}
+    };
+};
 var UserH = new UserHelper();
 wss.on('connection', function(ws) {
     console.log("connected");
@@ -64,14 +64,14 @@ wss.on('connection', function(ws) {
         ws.on('message', function(raw_message) {
             var data = JSON.parse(raw_message);
             if( data.message == m ){
-                h(raw_message);
+                h(data);
             }
         });
     };
 
     /* app specific implementation */
     on_message("login",function(data){
-        var user = UserH.login(data.username);
+        var user = UserH.login(data.userName);
         if( user ){
             emit({
                 message:"login_success",
@@ -79,48 +79,48 @@ wss.on('connection', function(ws) {
             });
             broadcast({
                 message:"user_enter",
-                username: data.username
+                userName: data.userName
             });
             ws.on('close', function() {
-                UserH.remove(user.username);
-                console.log("disconnected : " + user.username);
+                UserH.remove(user.userName);
+                console.log("disconnected : " + user.userName);
             });
-            console.log("successful login : " + user.username);
+            console.log("successful login : " + user.userName);
             console.log("successful login : " + user.token);
         }else{
             emit({
                 message:"login_failure"
             });
-            console.log("failure login : " + data.username);
+            console.log("failure login : " + data.userName);
         }
     });
-    on_message("send_message",function(data){
-        var user_message = {
-            username:data.username,
-            user_message:data.user_message,
-            message_id:data.message_id,
-            message_date:data.message_date
+    on_message("sendMessage",function(data){
+        var userMessage = {
+            userName:data.userName,
+            userMessage:data.userMessage,
+            messageId:data.messageId,
+            messageDate:data.messageDate
         };
-        if( UserH.emit_message(data.username , data.token, user_message) ){
-            console.log("successful send_message : " + data.username);
+        if( UserH.emit_message(data.userName , data.token, userMessage) ){
+            console.log("successful sendMessage : " + data.userName);
             broadcast({
-                message:"message_sent",
-                user_message: user_message
+                message:"messageSent",
+                userMessage: userMessage
             });
         }else{
-            console.log("failure send_message : " + data.username);
+            console.log("failure sendMessage : " + data.userName);
         }
     });
     on_message("bye",function(data){
-        if( UserH.logout(data.username , data.token) ){
+        if( UserH.logout(data.userName , data.token) ){
             broadcast({
                 message:"user_leave",
-                username: data.username
+                userName: data.userName
             });
-            console.log("successful bye : " + data.username);
+            console.log("successful bye : " + data.userName);
             console.log("successful bye : " + data.token);
         }else{
-            console.log("failure bye : " + data.username);
+            console.log("failure bye : " + data.userName);
             console.log("failure bye : " + data.token);
         }
         ws.close();
