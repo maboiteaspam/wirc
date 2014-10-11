@@ -65,4 +65,8 @@ angular.module('wircApp')
             });
         })
     });
+    $scope.$on("user_logout", function(user, socket){
+        $scope.messages = [];
+        $scope.local_messages = [];
+    });
   });
