@@ -36,9 +36,10 @@ angular.module('wircApp')
                     /* informs other components */
                     $rootScope.$broadcast("user_login", $scope.user, w );
                 });
+                /* logout on server disconnect */
                 w.onclose(function(){
                     $scope.$apply(function () {
-                        $rootScope.$broadcast("user_logout", $scope.user, null)
+                        $rootScope.$broadcast("user_logout", $scope.user, null);
                         w=null;
                     });
                 });
@@ -53,7 +54,7 @@ angular.module('wircApp')
         $scope.user.username = user.username = "";
         $scope.user.token = user.token = "";
         /* disconnects from the socket */
-        if(w) w.quit(user.username, user.token)
+        if(w) w.quit(user.username, user.token);
         w=null;
     })
 
