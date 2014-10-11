@@ -32,27 +32,11 @@ angular.module('wircApp')
          */
     ];
     $scope.messageId = 0;
-    /* when user sends a message */
-    $scope.$on('newMessage',function($event, message, user, w){
-        /* forge a message structure */
-        var userMessage = {
-            text:message,
-            userName:user.userName,
-            messageDate:moment().valueOf(),
-            id: $scope.messageId
-        };
-        $scope.messageId++;
-        /* stacks it for immediate display */
+    /* Displays entered message immediately */
+    $scope.$on('newMessage',function($event, userMessage, user, w){
         $scope.localMessages.push(userMessage);
-        /* now broadcast to other users via central server */
-        w.sendMessage(
-            userMessage.userName,
-            userMessage.text,
-            userMessage.id,
-            userMessage.messageDate,
-            user.token);
     });
-    /* when server emits a message */
+    /* Listens server message broadcast once user is logged in */
     $scope.$on('userLogin',function($event, user, w){
         w.on('messageSent',function(evt){
             $scope.$apply(function () {
@@ -75,6 +59,7 @@ angular.module('wircApp')
             });
         });
     });
+    /* Cleans interface when user disconnected */
     $scope.$on('userLogout', function( /* user, w */ ){
         $scope.messages = [];
         $scope.localMessages = [];

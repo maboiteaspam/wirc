@@ -9,13 +9,13 @@
  */
 angular.module('wircApp')
   .controller('LoginCtrl', function ($scope, $rootScope, wirc) {
-    /* users that has login */
+    /* users logged in the app */
     $scope.user = {
         logged:false,
         userName:'',
         token:''
     };
-    /* holds input value */
+    /* holds view input value */
     $scope.input = {
         logged:false,
         rememberMe:false,
