@@ -17,7 +17,8 @@ Wirc takes advantage of those libraries to offer a many-to-many chat system over
 ## Requirements
 
 [Node](http://nodejs.org/download/) >= v0.10.26
-[A browser](http://stackoverflow.com/a/2700609)
+
+[A browser supporting web sockets](http://stackoverflow.com/a/2700609)
 
 ## Install
 
@@ -33,7 +34,6 @@ cd server && npm i
 ```
 
 ## Run
-```
 
 Remote Central server
 
