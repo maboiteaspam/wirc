@@ -22,16 +22,6 @@
 
     <!-- Add your site or application content here -->
     <div class="container-fluid">
-        <!--
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Home</a></li>
-          <li><a ng-href="#">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
-        </ul>
-        <h3 class="text-muted">wirc</h3>
-      </div>
-        -->
 
         <div class="row">
             <div ng-include="'views/users.html'"
@@ -41,17 +31,12 @@
                  ng-controller="ChatCtrl"
                 ></div>
         </div>
+
         <div class="row">
             <div ng-include="'views/input.html'"
                  ng-controller="InputCtrl"
                 ></div>
         </div>
-
-        <!--
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
-        -->
 
         <div ng-include="'views/logout.html'"
              ng-controller="LogoutCtrl"
