@@ -17,7 +17,7 @@ angular
         'angular-underscore'
     ])
     .run(function($rootScope){
-        $rootScope.$on('userLogin', function(ev, user, w){
+        $rootScope.$on('userLogin', function( ){
             $rootScope.$on('newMessage', function(ev, userMessage, user, w){
                 /* broadcasts to other users via central server */
                 w.sendMessage(
@@ -35,6 +35,4 @@ angular
             });
         });
     })
-    /*
-     */
 ;
