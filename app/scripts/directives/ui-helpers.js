@@ -1,6 +1,5 @@
 'use strict';
 /*global _:false */
-/*global $:false */
 
 angular.module('uiHelpers', [
 ])
@@ -20,39 +19,4 @@ angular.module('uiHelpers', [
             }
         };
     }])
-    /* Ensures an element covers full view port height */
-    .directive('fullHeight', ['$window', function () {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attrs) {
-                var el = angular.element(element);
-                var resize = function(){
-                    /* Takes care of element s padding/margin */
-                    var value = $(window).height() - (el.outerHeight(true) - el.height());
-                    el.css('height', value+'px');
-                };
-                /* Listens to resize events */
-                $(window).resize(_.debounce(resize, 150));
-                /* Sets initial size */
-                resize();
-            }
-        };
-    }])
-    /* Ensures an element covers full view port width */
-    .directive('fullWidth', ['$window', function () {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attrs) {
-                var el = angular.element(element);
-                var resize = function(){
-                    /* Takes care of element s padding/margin */
-                    var value = $(window).width() - (el.outerWidth(true) - el.width());
-                    el.css('width', value+'px');
-                };
-                /* Listens to resize events */
-                $(window).resize(_.debounce(resize, 150));
-                /* Sets initial size */
-                resize();
-            }
-        };
-    }]);
+;
