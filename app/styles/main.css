@@ -20,6 +20,9 @@ ul, ul li{
     z-index: 1;
     overflow: auto;
 }
+.chat ul{
+    padding-left: 5px;
+}
 .users{
     position: absolute;
     top:0;
@@ -27,13 +30,32 @@ ul, ul li{
     width: 200px;
     z-index: 1;
     margin-bottom: 55px;
+
+    border-right-color: gray;
+    border-right-style: solid;
+    border-right-width: 1px;
+}
+.users ul{
+    padding-left: 5px;
+    line-height: 20px;
+}
+.users ul li:hover{
+    font-weight: bold;
+    cursor: pointer;
 }
 .user-input{
     width: 100%;
-    height: 50px;
+    height: 55px;
     position: fixed;
     bottom: 0;
     background-color: #ffffff;
+
+    padding-top: 10px;
+    border-top-color: gray;
+    border-top-style: solid;
+    border-top-width: 1px;
+
+    padding-right: 10px;
 }
 .user-input input{
     display: inline-block;
@@ -60,7 +82,7 @@ ul, ul li{
     height: 100%;
     background-color: #ffffff;
     z-index: -1;
-    opacity: .7;
+    opacity: 1;
 }
 .login-screen .form-signin{
     position: fixed;
