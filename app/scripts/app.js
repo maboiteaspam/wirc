@@ -14,6 +14,7 @@ angular
         'angularMoment',
         'angular-underscore'
     ])
+    /* Provides websocket access within angularJS  */
     .service('websocket', function() {
         this.get = function(address){
             var websocket = new WebSocket(address);
@@ -36,6 +37,8 @@ angular
             return websocket;
         }
     })
+    /* Implements event driven webocket consumption (it s a stream..) */
+    /* Implements convenient methods to consume wirc server */
     .service('wirc', function(websocket) {
         var sub = function(to,fn,one){
             if( one ){
@@ -52,8 +55,8 @@ angular
             return new function(){
                 var that = this;
                 that.socket = null;
-                that.ons = [];
-                that.oners = [];
+                that.ons = []; // repeated event listeners
+                that.oners = []; // one event listeners
 
                 var propagate_message = function(res){
                     for( var n in that.oners ){
@@ -63,6 +66,7 @@ angular
                         that.ons[n](res)
                     }
                 };
+                /* manages websocket lifecycle */
                 this.open = function(then){
                     that.socket = websocket.get(address);
                     that.socket.onopen = function(evt){
@@ -81,6 +85,7 @@ angular
                 this.onclose = function(then){
                     that.one("socket_close",then);
                 }
+                /* subscribes message receivers */
                 this.on = function(message,fn){
                     sub(that.ons,function(res){
                         if( res.message == message ){
@@ -96,6 +101,8 @@ angular
                     },true);
                 }
 
+                /* specific wirc message implementation */
+                /* emits chat user_message */
                 this.send_message = function(username,message_content,message_id,message_date,token){
                     that.socket.send(JSON.stringify({
                         message:'send_message',
@@ -106,12 +113,14 @@ angular
                         token:token
                     }));
                 }
+                /* emits login attempt */
                 this.login = function(username){
                     that.socket.send(JSON.stringify({
                         message:'login',
                         username:username
                     }));
                 }
+                /* emits user disconnection */
                 this.quit = function(username,token){
                     that.socket.send(JSON.stringify({
                         message:'bye',
@@ -125,44 +134,55 @@ angular
             };
         }
     })
+    /* Ensures vertical scroll displays bottom of a content */
     .directive('keepScrollDown', ['$window',function ($window) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var el = angular.element(element);
+                /* listens to new child nodes event */
                 el.on("DOMSubtreeModified", _.debounce(function(e){
                     if (el[0].scrollHeight-el[0].offsetHeight - el.scrollTop() <= 50 ) {
+                        /* scrolls to bottom */
                         el.scrollToAnimated(0, el[0].scrollHeight, 50);
                     }
                 }, 50));
             }
         };
     }])
+    /* Ensures an element covers full view port height */
     .directive('fullHeight', ['$window', function ($window) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var el = angular.element(element);
-                $(window).resize(_.debounce(function(){
+                var resize = function(){
+                    /* Takes care of element s padding/margin */
                     var value = $(window).height() - (el.outerHeight(true) - el.height())
                     el.css("height", value+"px");
-                }, 150));
-                var value = $(window).height() - (el.outerHeight(true) - el.height())
-                el.css("height", value+"px");
+                };
+                /* Listens to resize events */
+                $(window).resize(_.debounce(resize, 150));
+                /* Sets initial size */
+                resize();
             }
         };
     }])
+    /* Ensures an element covers full view port width */
     .directive('fullWidth', ['$window', function ($window) {
         return {
             restrict: 'A',
             link: function (scope, element, attrs) {
                 var el = angular.element(element);
-                $(window).resize(_.debounce(function(){
+                var resize = function(){
+                    /* Takes care of element s padding/margin */
                     var value = $(window).width() - (el.outerWidth(true) - el.width())
                     el.css("width", value+"px");
-                }, 150));
-                var value = $(window).width() - (el.outerWidth(true) - el.width())
-                el.css("width", value+"px");
+                };
+                /* Listens to resize events */
+                $(window).resize(_.debounce(resize, 150));
+                /* Sets initial size */
+                resize();
             }
         };
     }])

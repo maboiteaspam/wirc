@@ -9,7 +9,7 @@
  */
 angular.module('wircApp')
   .controller('ChatCtrl', function ($scope, moment) {
-    /* those are messages exchanged and broadcasted by users */
+    /* shared stack of messages exchanged by the server */
     $scope.messages = [
         /*
          {
@@ -20,7 +20,7 @@ angular.module('wircApp')
          }
          */
     ];
-    /* those are messages typed in by current user but not yet broadcasted to all users */
+    /* stack of local messages for immediate display */
     $scope.local_messages = [
         /*
          {
@@ -34,6 +34,7 @@ angular.module('wircApp')
     $scope.message_id = 0;
     /* when user sends a message */
     $scope.$on("new_message",function($event, message, user, w){
+        /* forge a message structure */
         var user_message = {
             text:message,
             username:user.username,
@@ -41,6 +42,7 @@ angular.module('wircApp')
             id: $scope.message_id
         };
         $scope.message_id++;
+        /* stacks it for immediate display */
         $scope.local_messages.push(user_message);
         /* now broadcast to other users via central server */
         w.send_message(user_message.username,user_message.text,user_message.id,user_message.message_date,user.token);
@@ -50,17 +52,20 @@ angular.module('wircApp')
         w.on("message_sent",function(evt){
             $scope.$apply(function () {
                 var message = evt.user_message;
+                /* needs to move the message from local immediate stack to shared stack */
                 if( message.username == user.username ){
                     $scope.local_messages = $scope.reject($scope.local_messages, function(m){
                         return m.id == message.message_id;
                     })
                 }
+                /* forge a message structure */
                 var user_message = {
                     text:message.user_message,
                     username:message.username,
                     message_date:message.message_date,
                     id: message.message_id
                 };
+                /* push into the shared message stack */
                 $scope.messages.push(user_message);
             });
         })

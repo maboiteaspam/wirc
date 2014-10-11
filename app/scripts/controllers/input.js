@@ -9,22 +9,25 @@
  */
 angular.module('wircApp')
   .controller('InputCtrl', function ($scope, $rootScope) {
+    /* holds input value */
     $scope.new_message = {
         text:"Type message here"
     };
-    $scope.sendMessage = function(){};
+    /* broadcasts message when used press Send */
     $rootScope.$on("user_login", function(ev, user, w){
         $scope.sendMessage = function(){
             $rootScope.$broadcast("new_message", $scope.new_message.text, user, w );
         };
     });
-    $rootScope.$on("user_logout", function(user, socket){
+    /* stop broadcasting */
+    $rootScope.$on("user_logout", function(user, w){
         $scope.sendMessage = function(){};
     });
+    /* check for Enter key to submit message */
     $scope.keyUpListener = function($event){
-        /* check for Enter key */
         if ($event.keyCode == 13) {
             $scope.sendMessage();
         }
     };
+    $scope.sendMessage = function(){};
   });
