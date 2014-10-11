@@ -16,9 +16,4 @@ angular
         'angularMoment',
         'angular-underscore'
     ])
-    /*
-     .run(function($rootScope){
-     $rootScope.tomate = "sdfsdfsdf"
-     })
-     */
 ;
