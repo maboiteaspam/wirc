@@ -38,9 +38,9 @@ angular.module('wircApp')
     });
     /* Listens server message broadcast once user is logged in */
     $scope.$on('userLogin',function($event, user, w){
-        w.on('messageSent',function(evt){
+        w.on('messageSent',function(data){
             $scope.$apply(function () {
-                var message = evt.userMessage;
+                var message = data.userMessage;
                 /* needs to move the message from local immediate stack to shared stack */
                 if( message.userName === user.userName ){
                     $scope.localMessages = $scope.reject($scope.localMessages, function(m){
