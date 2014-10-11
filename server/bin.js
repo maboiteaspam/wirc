@@ -6,6 +6,17 @@ var WebSocketServer = require('ws').Server
 
 var UserHelper = function(){
     var that = this;
+    that.listUsers = function(){
+        var ret = [];
+        for (var n in users ){
+            if( users[n] ){
+                ret.push({
+                    userName:users[n].userName
+                });
+            }
+        }
+        return ret;
+    };
     that.login = function(userName){
         if( ! users[userName] ){
             var token =  userName+'salt' /* to improve in real world */;
@@ -49,7 +60,7 @@ var UserHelper = function(){
 };
 var UserH = new UserHelper();
 wss.on('connection', function(ws) {
-    console.log("connected");
+    console.log('connected');
 
     /* websocket support */
     var broadcast = function(msg){
@@ -70,35 +81,40 @@ wss.on('connection', function(ws) {
     };
 
     /* app specific implementation */
-    on_message("login",function(data){
+    on_message('login',function(data){
         var user = UserH.login(data.userName);
         if( user ){
             emit({
-                message:"login_success",
-                token: user.token
+                message:'loginSuccess',
+                token: user.token,
+                list: UserH.listUsers()
             });
             broadcast({
-                message:"userEnter",
+                message:'userEnter',
                 userName: data.userName
+            });
+            emit({
+                message:'userList',
+                list: UserH.listUsers()
             });
             ws.on('close', function() {
                 UserH.remove(user.userName);
                 broadcast({
-                    message:"userLeave",
+                    message:'userLeave',
                     userName: user.userName
                 });
-                console.log("disconnected : " + user.userName);
+                console.log('disconnected : ' + user.userName);
             });
-            console.log("successful login : " + user.userName);
-            console.log("successful login : " + user.token);
+            console.log('successful login : ' + user.userName);
+            console.log('successful login : ' + user.token);
         }else{
             emit({
-                message:"login_failure"
+                message:'login_failure'
             });
-            console.log("failure login : " + data.userName);
+            console.log('failure login : ' + data.userName);
         }
     });
-    on_message("sendMessage",function(data){
+    on_message('sendMessage',function(data){
         var userMessage = {
             userName:data.userName,
             userMessage:data.userMessage,
@@ -106,28 +122,28 @@ wss.on('connection', function(ws) {
             messageDate:data.messageDate
         };
         if( UserH.emit_message(data.userName , data.token, userMessage) ){
-            console.log("successful sendMessage : " + data.userName);
+            console.log('successful sendMessage : ' + data.userName);
             broadcast({
-                message:"messageSent",
+                message:'messageSent',
                 userMessage: userMessage
             });
         }else{
-            console.log("failure sendMessage : " + data.userName);
+            console.log('failure sendMessage : ' + data.userName);
         }
     });
-    on_message("bye",function(data){
+    on_message('bye',function(data){
         if( UserH.logout(data.userName , data.token) ){
             broadcast({
-                message:"userLeave",
+                message:'userLeave',
                 userName: data.userName
             });
-            console.log("successful bye : " + data.userName);
-            console.log("successful bye : " + data.token);
+            console.log('successful bye : ' + data.userName);
+            console.log('successful bye : ' + data.token);
         }else{
-            console.log("failure bye : " + data.userName);
-            console.log("failure bye : " + data.token);
+            console.log('failure bye : ' + data.userName);
+            console.log('failure bye : ' + data.token);
         }
         ws.close();
     });
 });
-console.log("ready ");
+console.log('ready ');
