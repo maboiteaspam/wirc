@@ -8,7 +8,7 @@
  * Controller of the wircApp
  */
 angular.module('wircApp')
-  .controller('ChatCtrl', function ($scope, moment) {
+  .controller('ChatCtrl', function ($scope) {
     /* shared stack of messages exchanged by the server */
     $scope.messages = [
         /*
@@ -32,7 +32,7 @@ angular.module('wircApp')
          */
     ];
     /* Displays entered message immediately */
-    $scope.$on('newMessage',function($event, userMessage, user, w){
+    $scope.$on('newMessage',function($event, userMessage){
         $scope.localMessages.push(userMessage);
     });
     /* Listens server message broadcast once user is logged in */
