@@ -30,14 +30,6 @@ angular.module('wircApp')
 
             $rootScope.$broadcast('newMessage', userMessage, user, w );
 
-            /* broadcasts to other users via central server */
-            w.sendMessage(
-                userMessage.userName,
-                userMessage.text,
-                userMessage.id,
-                userMessage.messageDate,
-                user.token);
-
         };
     });
     /* stops broadcasting */

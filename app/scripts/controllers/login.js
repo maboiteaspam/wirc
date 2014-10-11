@@ -53,11 +53,6 @@ angular.module('wircApp')
         $scope.user.logged = $scope.input.logged = user.logged = false;
         $scope.user.userName = user.userName = '';
         $scope.user.token = user.token = '';
-        /* disconnects from the socket */
-        if(w){
-            w.quit(user.userName, user.token);
-        }
-        w=null;
     });
 
   });
