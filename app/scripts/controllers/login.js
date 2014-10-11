@@ -27,7 +27,7 @@ angular.module('wircApp')
         /* opens socket to server */
         var w = wirc.get($scope.input.serverAddress);
         w.open(function(){
-            w.one('login_success',function(res){
+            w.one('loginSuccess',function(res){
                 $scope.$apply(function () {
                     /* saves successful login, updates view */
                     $scope.user.logged = $scope.input.logged = true;
