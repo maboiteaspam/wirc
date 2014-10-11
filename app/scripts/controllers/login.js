@@ -27,9 +27,10 @@ angular.module('wircApp')
         /* opens socket to server */
         var w = wirc.get($scope.input.serverAddress);
         w.open(function(){
+            /* waits for login to initialize ui to socket communication */
             w.one('loginSuccess',function(res){
                 $scope.$apply(function () {
-                    /* saves successful login, updates view */
+                    /* applies successful login */
                     $scope.user.logged = $scope.input.logged = true;
                     $scope.user.userName = $scope.input.userName;
                     $scope.user.token = res.token;
@@ -48,8 +49,8 @@ angular.module('wircApp')
             w.login($scope.input.userName);
         });
     };
+    /* applies logout */
     $rootScope.$on('userLogout', function(ev, user, w){
-        /* saves logout, updates view */
         $scope.user.logged = $scope.input.logged = user.logged = false;
         $scope.user.userName = user.userName = '';
         $scope.user.token = user.token = '';
