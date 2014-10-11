@@ -78,11 +78,15 @@ wss.on('connection', function(ws) {
                 token: user.token
             });
             broadcast({
-                message:"user_enter",
+                message:"userEnter",
                 userName: data.userName
             });
             ws.on('close', function() {
                 UserH.remove(user.userName);
+                broadcast({
+                    message:"userLeave",
+                    userName: user.userName
+                });
                 console.log("disconnected : " + user.userName);
             });
             console.log("successful login : " + user.userName);
@@ -114,7 +118,7 @@ wss.on('connection', function(ws) {
     on_message("bye",function(data){
         if( UserH.logout(data.userName , data.token) ){
             broadcast({
-                message:"user_leave",
+                message:"userLeave",
                 userName: data.userName
             });
             console.log("successful bye : " + data.userName);
