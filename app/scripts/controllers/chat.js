@@ -31,7 +31,6 @@ angular.module('wircApp')
          }
          */
     ];
-    $scope.messageId = 0;
     /* Displays entered message immediately */
     $scope.$on('newMessage',function($event, userMessage, user, w){
         $scope.localMessages.push(userMessage);
