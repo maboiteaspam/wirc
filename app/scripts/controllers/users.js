@@ -21,9 +21,7 @@ angular.module('wircApp')
     $scope.$on('userLogin',function($event, user, w){
         w.one('userList',function(data){
             $scope.$apply(function () {
-                $scope.users = $scope.reject($scope.users, function(m){
-                    return true;
-                });
+                $scope.users = [];
                 for( var n in data.list ){
                     $scope.users.push({
                         name:data.list[n].userName
