@@ -36,13 +36,16 @@ var UserHelper = function(){
         }
         return ret;
     };
-    that.login = function(userName){
+    that.login = function(ws, userName){
         if( ! users[userName] ){
             var token =  userName+'salt' /* to improve in real world */;
             users[userName] = {
+                ws:ws,
                 userName:userName,
                 token:token,
-                messages:[]
+                messages:[],
+                camSubs:[],
+                picture:null
             };
             return users[userName];
         }
@@ -69,12 +72,35 @@ var UserHelper = function(){
         }
         return false;
     };
+    that.request_cam = function(userName,token,toUserName){
+        if( that.check_token(userName,token) ){
+            if( users[toUserName]
+            && users[toUserName].allow_web_cam ){
+                users[userName].camSubs.push(toUserName);
+            }
+            return true;
+        }
+        return false;
+    };
     that.remove = function(userName){
         if( users[userName] ){
             users[userName] = null;
             return true;
         }
         return false;
+    };
+
+    /* */
+    that.broadcast = function(msg){
+        for( var n in users ){
+            if( users[n] )
+                users[n].ws.send( JSON.stringify(msg) );
+        }
+    };
+    that.send = function(userName, msg){
+        if( users[userName] ){
+            users[userName].ws.send( JSON.stringify(msg) );
+        }
     };
 };
 
@@ -89,11 +115,6 @@ var backend = function(host,port){
         console.log('connected');
 
         /* websocket support */
-        var broadcast = function(msg){
-            wss.clients.forEach(function (client) {
-                client.send( JSON.stringify(msg) );
-            })
-        };
         var emit = function(msg){
             ws.send( JSON.stringify(msg) );
         };
@@ -108,14 +129,14 @@ var backend = function(host,port){
 
         /* app specific implementation */
         on_message('login',function(data){
-            var user = UserH.login(data.userName);
+            var user = UserH.login(ws, data.userName);
             if( user ){
                 emit({
                     message:'loginSuccess',
                     token: user.token,
                     list: UserH.listUsers()
                 });
-                broadcast({
+                UserH.broadcast({
                     message:'userEnter',
                     userName: data.userName
                 });
@@ -125,7 +146,7 @@ var backend = function(host,port){
                 });
                 ws.on('close', function() {
                     UserH.remove(user.userName);
-                    broadcast({
+                    UserH.broadcast({
                         message:'userLeave',
                         userName: user.userName
                     });
@@ -149,7 +170,7 @@ var backend = function(host,port){
             };
             if( UserH.emit_message(data.userName , data.token, userMessage) ){
                 console.log('successful sendMessage : ' + data.userName);
-                broadcast({
+                UserH.broadcast({
                     message:'messageSent',
                     userMessage: userMessage
                 });
@@ -157,9 +178,21 @@ var backend = function(host,port){
                 console.log('failure sendMessage : ' + data.userName);
             }
         });
+        on_message('userRequestCam',function(data){
+            if( UserH.request_cam(data.userName, data.token, data.toUserName) ){
+                UserH.send(data.toUserName, {
+                    message:'serverRequestCam',
+                    userName: data.userName
+                });
+                console.log('negotiating userRequestCam : ' + data.userName);
+                console.log('negotiating userRequestCam : ' + data.toUserName);
+            }else{
+                console.log('failure userRequestCam : ' + data.userName);
+            }
+        });
         on_message('bye',function(data){
             if( UserH.logout(data.userName , data.token) ){
-                broadcast({
+                UserH.broadcast({
                     message:'userLeave',
                     userName: data.userName
                 });
