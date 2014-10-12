@@ -26,19 +26,16 @@ Wirc takes advantage of those libraries to offer a many-to-many chat system over
 
 ## Testing
 
-Connect on Koding uing your account, then type in
-
-
 ```
 git clone http://github.com/maboiteaspam/wirc
 cd wirc 
 npm i -p
 npm install -g bower
 bower i
-node bin.js --fronthost 0.0.0.0 --backhost 0.0.0.0
+node bin.js
 ```
 
 
-Browse to http://[username].koding.com:9000/
-Websocket is connected on http://[username].koding.com:8080/
+Browse to http://localhost:9000/
+Websocket is connected on http://localhost:8080/
 
