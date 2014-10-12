@@ -7,7 +7,7 @@ Demonstrate use of various web frameworks to provide an irc-like chat.
 | ------------- |-------------|-------------|
 | **Bootstrap** | [Website](http://getbootstrap.com) | [Source](https://github.com/twbs/bootstrap) |
 | **AngularJS** | [Website](https://angularjs.org/) | [Source](https://github.com/angular/angular.js) |
-| **Bower** | [Website](http://bower.io/) | - [Source](https://github.com/bower/bower) |
+| **Bower** | [Website](http://bower.io/) | [Source](https://github.com/bower/bower) |
 | **WebSocket** | [Website](https://developer.mozilla.org/fr/docs/WebSockets) | [Source](https://github.com/einaros/ws) |
 | **NodeJS** | [Website](http://nodejs.org/) | [Source](https://github.com/joyent/node) |
 
