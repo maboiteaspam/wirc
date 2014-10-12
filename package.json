@@ -1,7 +1,11 @@
 {
   "name": "wirc",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "ws": "^0.4.32",
+    "express": "4.x",
+    "commander": "^2.3.0"
+  },
   "devDependencies": {
     "grunt": "^0.4.1",
     "grunt-autoprefixer": "^0.7.3",
