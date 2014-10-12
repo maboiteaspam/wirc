@@ -35,7 +35,7 @@ bower i
 node bin.js
 ```
 
+[Browse here http://localhost:9000/](http://localhost:9000/)
 
-Browse to http://localhost:9000/
 Websocket is connected on http://localhost:8080/
 
