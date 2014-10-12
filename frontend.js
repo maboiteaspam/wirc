@@ -10,9 +10,9 @@ var pkg = require( path.join(__dirname, 'package.json') );
 program
     .version(pkg.version)
 
-    .option('-p, --frontport <port>',
+    .option('-p, --port <port>',
     'Port on which listens to (defaults to 9000)', parseInt)
-    .option('-h, --fronthost <hostname>',
+    .option('-h, --hostname <hostname>',
     'Hostname on which listens to (defaults to localhost)')
 
     .parse(process.argv)
