@@ -19,7 +19,7 @@ Wirc takes advantage of those libraries to offer a many-to-many chat system over
 
 - [Git](http://git-scm.com/)
 - [Node](http://nodejs.org/download/) >= v0.10.26
-- [Node-gyp](https://github.com/TooTallNate/node-gyp/) >= v0.10.26
+- [Node-gyp](https://github.com/TooTallNate/node-gyp/)
 - [A browser supporting web sockets](http://stackoverflow.com/a/2700609)
 
 
