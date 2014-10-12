@@ -11,18 +11,18 @@ var program = require('commander');
 program
     .version(pkg.version)
 
-    .option('-fp, --frontport <port>',
+    .option('--frontport <port>',
         'Port on which frontend listens to (defaults to 9000)', parseInt)
-    .option('-fh, --fronthost <hostname>',
+    .option('--fronthost <hostname>',
         'Hostname on which frontend listens to (defaults to localhost)')
-    .option('-fo, --frontonly',
+    .option('--frontonly',
         'Run frontend only', parseInt)
 
-    .option('-bp, --backport <port>',
+    .option('--backport <port>',
         'Port on which backend listens to (defaults to 8080)', parseInt)
-    .option('-bh, --backhost <hostname>',
+    .option('--backhost <hostname>',
         'Hostname on which backend listens to (defaults to localhost)')
-    .option('-bo, --backonly',
+    .option('--backonly',
         'Run backend only', parseInt)
 
     .parse(process.argv)

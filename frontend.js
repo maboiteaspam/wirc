@@ -29,8 +29,8 @@ var frontend = function(host,port){
         express.static(__dirname + '/bower_components'));
     app.use(express.static(__dirname + '/app'));
 
-    var server = app.listen(port, host, function() {
-        console.log('Listening on port %d', server.address().port);
+    app.listen(port, host, function() {
+        console.log('Listening on '+host+":"+port);
     });
 };
 frontend(

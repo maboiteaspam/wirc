@@ -6,7 +6,8 @@ Demonstrate use of various web frameworks to provide an irc-like chat.
 | Experiment Name | Website | Source Code |
 | ------------- |-------------|-------------|
 | **Bootstrap** | [Website](http://getbootstrap.com) | [Source](https://github.com/twbs/bootstrap) |
-| **AngularJS** | [Website](https://angularjs.org/) | [Source](https://github.com/streamproc/MediaStreamRecorder/tree/master/demos/video-recorder.html) |
+| **AngularJS** | [Website](https://angularjs.org/) | [Source](https://github.com/einaros/ws) |
+| **Bower** | [Website](http://bower.io/) | - | [Source](https://github.com/bower/bower) |
 | **WebSocket** | [Website](https://developer.mozilla.org/fr/docs/WebSockets) | - |
 | **NodeJS** | [Website](http://nodejs.org/) | [Source](https://github.com/joyent/node) |
 
@@ -14,11 +15,11 @@ Demonstrate use of various web frameworks to provide an irc-like chat.
 
 Wirc takes advantage of those libraries to offer a many-to-many chat system over a websocket connected to a remote central server.
 
-
 ## Requirements
 
 - [Git](http://git-scm.com/)
 - [Node](http://nodejs.org/download/) >= v0.10.26
+- [Node-gyp](https://github.com/TooTallNate/node-gyp/) >= v0.10.26
 - [A browser supporting web sockets](http://stackoverflow.com/a/2700609)
 
 
@@ -27,8 +28,17 @@ Wirc takes advantage of those libraries to offer a many-to-many chat system over
 
 Connect on Koding uing your account, then type in
 
+
 ```
-npm i maboiteaspam/wirc
-bower -i
-node bin.js
+git clone http://github.com/maboiteaspam/wirc
+cd wirc 
+npm i -p
+npm install -g bower
+bower i
+node bin.js --fronthost 0.0.0.0 --backhost 0.0.0.0
 ```
+
+
+Browse to http://[username].koding.com:9000/
+Websocket is connected on http://[username].koding.com:8080/
+

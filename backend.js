@@ -172,7 +172,7 @@ var backend = function(host,port){
             ws.close();
         });
     });
-    console.log('ready ');
+    console.log('ready '+host+":"+port);
 
 };
 
