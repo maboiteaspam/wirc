@@ -2,6 +2,11 @@
     <ul>
         <li ng-repeat="user in users">
             {{user.name}}
+            <a ng-if="!user.is_current_user"
+               ng-click="requestCam(user.name)"
+                    >
+                cam off
+            </a>
         </li>
     </ul>
 </div>

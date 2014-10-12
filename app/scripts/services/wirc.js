@@ -107,6 +107,15 @@ angular.module('wirc', [
                         token:token
                     }));
                 };
+                /*  */
+                this.requestCam = function(userName,toUserName,token){
+                    that.socket.send(JSON.stringify({
+                        message:'userRequestCam',
+                        userName:userName,
+                        toUserName:toUserName,
+                        token:token
+                    }));
+                };
                 /* emits login attempt */
                 this.login = function(userName){
                     that.socket.send(JSON.stringify({
