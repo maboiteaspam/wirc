@@ -28,6 +28,13 @@ angular.module('wircApp')
             };
             $scope.messageId++;
 
+            /* broadcasts to other users via central server */
+            w.sendMessage(
+                userMessage.userName,
+                userMessage.text,
+                userMessage.id,
+                userMessage.messageDate,
+                user.token);
             $rootScope.$broadcast('newMessage', userMessage, user, w );
 
         };

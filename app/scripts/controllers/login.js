@@ -50,10 +50,14 @@ angular.module('wircApp')
         });
     };
     /* applies logout */
-    $rootScope.$on('userLogout', function(ev, user){
-        $scope.user.logged = $scope.input.logged = user.logged = false;
-        $scope.user.userName = user.userName = '';
-        $scope.user.token = user.token = '';
+    $rootScope.$on('userLogout', function(ev, user, w){
+        $scope.user.logged = $scope.input.logged = false;
+        $scope.user.userName = '';
+        $scope.user.token = '';
+        /* disconnects from the socket */
+        if(w){
+            w.quit(user.userName, user.token);
+        }
     });
 
   });
