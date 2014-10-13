@@ -11,7 +11,7 @@ angular.module('wircApp')
   .controller('InputCtrl', function ($scope, $rootScope, moment) {
     /* holds input value */
     $scope.newMessage = {
-        text:'Type message here'
+        text:''
     };
     /* holds count of messages sent */
     $scope.messageId = 0;
