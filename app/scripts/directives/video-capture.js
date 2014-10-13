@@ -27,34 +27,42 @@ angular.module('videoCapture', [
                 var canvas = el.find("canvas").get()[0];
                 var ctx = canvas.getContext('2d');
 
-                navigator.webkitGetUserMedia({
-                        video: true,
-                        audio: !true
-                    },
-                    function(stream) {
-                        video.src = webkitURL.createObjectURL(stream);
-                        var copy_p = function(){
-                            ctx.drawImage(video, 0, 0, 320, 240);
-                            var data = canvas.toDataURL('image/jpeg', 1.0);
-                            webCamFeed.picture = dataURItoBlob(data);
-                        };
-                        scope.$watch(function(){
-                            return webCamFeed.is_open;
-                        },function(newValue){
-                            if( newValue ){
+                var unbindWatcher1 = scope.$watch(function(){
+                    return webCamFeed.is_open;
+                },function(newValue){
+                    if( newValue ){
+                        navigator.webkitGetUserMedia({
+                                video: true,
+                                audio: !true
+                            },
+                            function(stream) {
+                                video.src = webkitURL.createObjectURL(stream);
+                                var copy_p = function(){
+                                    ctx.drawImage(video, 0, 0, 320, 240);
+                                    var data = canvas.toDataURL('image/jpeg', 1.0);
+                                    webCamFeed.picture = dataURItoBlob(data);
+                                };
                                 timer = $interval(copy_p, 40,null,false);
-                            }else{
-                                $interval.cancel( timer );
-                                stream.stop();
+                                var unbindWatcher = scope.$watch(function(){
+                                    return webCamFeed.is_open;
+                                },function(newValue){
+                                    if( ! newValue ){
+                                        $interval.cancel( timer );
+                                        stream.stop();
+                                        unbindWatcher();
+                                    }
+                                });
+                            },
+                            function(err) {
+                                console.log("Unable to get video stream!")
                             }
-                        });
-                    },
-                    function(err) {
-                        console.log("Unable to get video stream!")
+                        );
                     }
-                );
+                });
+
                 scope.$on("$destroy",function( event ) {
                     $interval.cancel( timer );
+                    unbindWatcher1();
                 });
 
                 function dataURItoBlob(dataURI) {
