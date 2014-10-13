@@ -1,11 +1,12 @@
 <div class="users">
     <ul>
-        <li ng-repeat="user in users">
+        <li ng-repeat="user in users"
+            ng-class="{current_user:user.is_current_user}">
             {{user.name}}
             <a ng-if="!user.is_current_user"
                ng-click="requestCam(user.name)"
                     >
-                cam off
+                {{user.is_cam_enabled ? "cam on" : "cam off"}}
             </a>
         </li>
     </ul>
