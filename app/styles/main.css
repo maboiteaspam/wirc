@@ -46,6 +46,9 @@ ul, ul li{
     font-weight: bold;
     cursor: pointer;
 }
+.users ul li.current_user{
+    text-decoration: underline;
+}
 .user-input{
     position: fixed;
     width: 100%;
