@@ -108,9 +108,17 @@ angular.module('wirc', [
                     }));
                 };
                 /*  */
-                this.requestCam = function(userName,toUserName,token){
+                this.unSubCam = function(userName,toUserName,token){
                     that.socket.send(JSON.stringify({
-                        message:'userRequestCam',
+                        message:'userUnSubCam',
+                        userName:userName,
+                        toUserName:toUserName,
+                        token:token
+                    }));
+                };
+                this.subCam = function(userName,toUserName,token){
+                    that.socket.send(JSON.stringify({
+                        message:'userSubCam',
                         userName:userName,
                         toUserName:toUserName,
                         token:token

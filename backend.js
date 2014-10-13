@@ -74,7 +74,7 @@ var UserHelper = function(){
         }
         return false;
     };
-    that.request_cam = function(userName,token,toUserName){
+    that.sub_cam = function(userName,token,toUserName){
         if( that.check_token(userName,token) ){
             if( users[toUserName]
             && users[toUserName].allowWebCam ){
@@ -84,11 +84,30 @@ var UserHelper = function(){
         }
         return false;
     };
-    that.get_cam_subs = function(userName,token){
+    that.un_sub_cam = function(userName,token,toUserName){
         if( that.check_token(userName,token) ){
-            return users[userName].camSubs;
+            if( users[toUserName]
+                && users[toUserName].allowWebCam ){
+                var index = users[userName].camSubs.indexOf(toUserName);
+                if (index > -1) {
+                    users[userName].camSubs.splice(index, 1);
+                    return true;
+                }
+            }
         }
-        return [];
+        return false;
+    };
+    that.get_cam_subs = function(userName,token){
+        var ret = [];
+        if( that.check_token(userName,token) ){
+            for( var n in users ){
+                if( users[n]
+                    && users[n].camSubs.indexOf(userName)>-1 ){
+                    ret.push(n);
+                }
+            }
+        }
+        return ret;
     };
     that.remove = function(userName){
         if( users[userName] ){
@@ -105,11 +124,12 @@ var UserHelper = function(){
                 users[n].ws.send( JSON.stringify(msg) );
         }
     };
-    that.broadcast_partial = function(msg, users){
-        for( var k in users ){
-            var n = users[k];
-            if( users[n] )
+    that.broadcast_partial = function(msg, partial_users){
+        for( var k in partial_users ){
+            var n = partial_users[k];
+            if( users[n] ){
                 users[n].ws.send( JSON.stringify(msg) );
+            }
         }
     };
     that.send = function(userName, msg){
@@ -149,8 +169,7 @@ var backend = function(host,port){
                 user.allowWebCam = data.allowWebCam;
                 emit({
                     message:'loginSuccess',
-                    token: user.token,
-                    list: UserH.listUsers()
+                    token: user.token
                 });
                 UserH.broadcast({
                     message:'userEnter',
@@ -195,27 +214,49 @@ var backend = function(host,port){
                 console.log('failure sendMessage : ' + data.userName);
             }
         });
-        on_message('userRequestCam',function(data){
-            if( UserH.request_cam(data.userName, data.token, data.toUserName) ){
+        on_message('userUnSubCam',function(data){
+            if( UserH.un_sub_cam(data.userName, data.token, data.toUserName) ){
+                console.log('successful userUnSubCam : ' + data.userName);
+                console.log('successful userUnSubCam : ' + data.toUserName);
+                var receivers = UserH.get_cam_subs(data.userName, data.token);
+                if( ! receivers.length ){
+                    UserH.send(data.toUserName, {
+                        message:'serverStopCam'
+                    });
+                    console.log('serverStopCam : ' + data.toUserName);
+                }
+                setTimeout(function(){
+                    UserH.send(data.userName, {
+                        message:'serverEndSendPicture',
+                        fromUserName:data.toUserName
+                    });
+                },50)
+            }else{
+                console.log('failure userSubCam : ' + data.userName);
+            }
+        });
+        on_message('userSubCam',function(data){
+            if( UserH.sub_cam(data.userName, data.token, data.toUserName) ){
                 UserH.send(data.toUserName, {
                     message:'serverRequestCam',
                     userName: data.userName
                 });
-                console.log('negotiating userRequestCam : ' + data.userName);
-                console.log('negotiating userRequestCam : ' + data.toUserName);
+                console.log('negotiating userSubCam : ' + data.userName);
+                console.log('negotiating userSubCam : ' + data.toUserName);
             }else{
-                console.log('failure userRequestCam : ' + data.userName);
+                console.log('failure userSubCam : ' + data.userName);
             }
         });
         on_message('userSendCamPicture',function(data){
             var receivers = UserH.get_cam_subs(data.userName, data.token);
-            if( receivers.length ){
+            if( receivers.length>0 ){
                 UserH.broadcast_partial({
                     message:'serverSendPicture',
                     fromUserName: data.userName,
                     picture: data.picture
                 }, receivers);
-                //console.log('picture receive -> sent : ' + data.userName);
+                console.log('picture receive -> sent : ' + data.userName);
+                console.log(receivers);
             }else{
                 UserH.send(data.userName, {
                     message:'serverStopCam'
