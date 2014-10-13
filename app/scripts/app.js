@@ -12,6 +12,7 @@ angular
     .module('wircApp', [
         'duScroll',
         'wirc',
+        'videoCapture',
         'uiHelpers',
         'angularMoment',
         'angular-underscore'

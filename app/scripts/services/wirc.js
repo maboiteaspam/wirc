@@ -116,11 +116,20 @@ angular.module('wirc', [
                         token:token
                     }));
                 };
+                this.sendCamPicture = function(userName,picture,token){
+                    that.socket.send(JSON.stringify({
+                        message:'userSendCamPicture',
+                        userName:userName,
+                        picture:picture,
+                        token:token
+                    }));
+                };
                 /* emits login attempt */
-                this.login = function(userName){
+                this.login = function(userName, allowWebCam){
                     that.socket.send(JSON.stringify({
                         message:'login',
-                        userName:userName
+                        userName:userName,
+                        allowWebCam:allowWebCam
                     }));
                 };
                 /* emits user disconnection */

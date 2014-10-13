@@ -46,7 +46,7 @@ angular.module('wircApp')
                 });
             },true);
             /* realize the login sequence */
-            w.login($scope.input.userName);
+            w.login($scope.input.userName, true);
         });
     };
     /* applies logout */

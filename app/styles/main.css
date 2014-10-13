@@ -109,3 +109,9 @@ ul, ul li{
 .logout.connected{
     display: block;
 }
+
+.video-capture{
+    position: fixed;
+    z-index: -1;
+    visibility: hidden;
+}

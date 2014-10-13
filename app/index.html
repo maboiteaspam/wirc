@@ -23,6 +23,10 @@
     <!-- Add your site or application content here -->
     <div class="container-fluid">
 
+        <div ng-include="'views/video-capture.html'"
+             ng-controller="VideoCaptureCtrl"
+                ></div>
+
         <div class="row">
             <div ng-include="'views/users.html'"
                  ng-controller="UsersCtrl"
@@ -45,6 +49,8 @@
         <div ng-include="'views/login.html'"
              ng-controller="LoginCtrl"
             ></div>
+
+
     </div>
 
     <!-- build:js(.) scripts/oldieshim.js -->
@@ -70,6 +76,7 @@
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/directives/ui-helpers.js"></script>
+        <script src="scripts/directives/video-capture.js"></script>
         <script src="scripts/services/wirc.js"></script>
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/login.js"></script>
@@ -77,6 +84,8 @@
         <script src="scripts/controllers/users.js"></script>
         <script src="scripts/controllers/chat.js"></script>
         <script src="scripts/controllers/input.js"></script>
+        <script src="scripts/controllers/video-capture.js"></script>
         <!-- endbuild -->
+
 </body>
 </html>

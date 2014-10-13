@@ -30,7 +30,8 @@ var UserHelper = function(){
         for (var n in users ){
             if( users[n] ){
                 ret.push({
-                    userName:users[n].userName
+                    userName:users[n].userName,
+                    allowWebCam:users[n].allowWebCam
                 });
             }
         }
@@ -45,6 +46,7 @@ var UserHelper = function(){
                 token:token,
                 messages:[],
                 camSubs:[],
+                allowWebCam:false,
                 picture:null
             };
             return users[userName];
@@ -75,12 +77,18 @@ var UserHelper = function(){
     that.request_cam = function(userName,token,toUserName){
         if( that.check_token(userName,token) ){
             if( users[toUserName]
-            && users[toUserName].allow_web_cam ){
+            && users[toUserName].allowWebCam ){
                 users[userName].camSubs.push(toUserName);
+                return true;
             }
-            return true;
         }
         return false;
+    };
+    that.get_cam_subs = function(userName,token){
+        if( that.check_token(userName,token) ){
+            return users[userName].camSubs;
+        }
+        return [];
     };
     that.remove = function(userName){
         if( users[userName] ){
@@ -93,6 +101,13 @@ var UserHelper = function(){
     /* */
     that.broadcast = function(msg){
         for( var n in users ){
+            if( users[n] )
+                users[n].ws.send( JSON.stringify(msg) );
+        }
+    };
+    that.broadcast_partial = function(msg, users){
+        for( var k in users ){
+            var n = users[k];
             if( users[n] )
                 users[n].ws.send( JSON.stringify(msg) );
         }
@@ -131,6 +146,7 @@ var backend = function(host,port){
         on_message('login',function(data){
             var user = UserH.login(ws, data.userName);
             if( user ){
+                user.allowWebCam = data.allowWebCam;
                 emit({
                     message:'loginSuccess',
                     token: user.token,
@@ -138,7 +154,8 @@ var backend = function(host,port){
                 });
                 UserH.broadcast({
                     message:'userEnter',
-                    userName: data.userName
+                    userName: data.userName,
+                    allowWebCam: data.allowWebCam
                 });
                 emit({
                     message:'userList',
@@ -188,6 +205,22 @@ var backend = function(host,port){
                 console.log('negotiating userRequestCam : ' + data.toUserName);
             }else{
                 console.log('failure userRequestCam : ' + data.userName);
+            }
+        });
+        on_message('userSendCamPicture',function(data){
+            var receivers = UserH.get_cam_subs(data.userName, data.token);
+            if( receivers.length ){
+                UserH.broadcast_partial({
+                    message:'serverSendPicture',
+                    fromUserName: data.userName,
+                    picture: data.picture
+                }, receivers);
+                //console.log('picture receive -> sent : ' + data.userName);
+            }else{
+                UserH.send(data.userName, {
+                    message:'serverStopCam'
+                });
+                console.log('failure receive -> sent no : ' + data.userName);
             }
         });
         on_message('bye',function(data){
