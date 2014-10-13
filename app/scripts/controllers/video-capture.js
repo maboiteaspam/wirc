@@ -12,6 +12,7 @@ angular.module('wircApp')
 
     /*  */
     $scope.picure = null;
+    var unbindWatcher;
     /*  */
     $scope.$on('userLogin',function($event, user, w){
         w.on('serverRequestCam',function(data){
@@ -24,7 +25,7 @@ angular.module('wircApp')
                 webCamFeed.is_open = false;
             });
         });
-        $scope.$watch(function(){
+        unbindWatcher = $scope.$watch(function(){
             return webCamFeed.picture;
         },function(newValue){
             if( webCamFeed.is_open ){
@@ -35,5 +36,6 @@ angular.module('wircApp')
     /*  */
     $scope.$on('userLogout', function( /* user, w */ ){
         webCamFeed.is_open = false;
+        unbindWatcher();
     });
   });
