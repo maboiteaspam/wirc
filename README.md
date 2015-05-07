@@ -24,7 +24,7 @@ Wirc takes advantage of those libraries to offer a many-to-many chat system over
 
 
 
-## Testing
+## Try it
 
 ```
 git clone http://github.com/maboiteaspam/wirc
@@ -35,7 +35,27 @@ bower i
 node bin.js
 ```
 
-[Browse here http://localhost:9000/](http://localhost:9000/)
+Browse here [http://localhost:9000/](http://localhost:9000/)
 
 Websocket is connected on http://localhost:8080/
+
+
+
+## Test it
+
+Terminal 1
+```
+npm install -g grunt-cli
+grunt 
+grunt serve
+```
+
+Terminal 2
+```
+node bin.js --backonly
+```
+
+Browse here [http://localhost:9000/](http://localhost:9000/)
+
+Hack the files and see what happens
 
