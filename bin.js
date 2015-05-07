@@ -12,18 +12,18 @@ program
     .version(pkg.version)
 
     .option('--frontport <port>',
-        'Port on which frontend listens to (defaults to 9000)', parseInt)
+        'Port on which frontend listens to (defaults to 9000)')
     .option('--fronthost <hostname>',
         'Hostname on which frontend listens to (defaults to localhost)')
     .option('--frontonly',
-        'Run frontend only', parseInt)
+        'Run frontend only')
 
     .option('--backport <port>',
-        'Port on which backend listens to (defaults to 8080)', parseInt)
+        'Port on which backend listens to (defaults to 8080)')
     .option('--backhost <hostname>',
         'Hostname on which backend listens to (defaults to localhost)')
     .option('--backonly',
-        'Run backend only', parseInt)
+        'Run backend only')
 
     .parse(process.argv)
 ;
